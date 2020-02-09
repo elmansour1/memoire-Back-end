@@ -16,5 +16,7 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface AuteurRepository extends JpaRepository<Auteur, Long>{
-    public Auteur findAuteurByNom(Auteur auteur);
+    public Auteur findAuteurByNom(String auteur);
+    public Auteur findAuteurByEmail(String auteur);
+    public Auteur findAuteurByTelephone(String auteur);
 }

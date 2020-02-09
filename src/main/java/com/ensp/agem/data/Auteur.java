@@ -12,8 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Version;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,16 +32,18 @@ public class Auteur implements Serializable{
     private String email;
     @Column(unique = true)
     private String telephone;
+    private String motDePasse;
     
     public Auteur(){
         
     }
 
-    public Auteur(String matricule, String nom, String email, String telephone) {
+    public Auteur(String matricule, String nom, String email, String telephone, String motDePasse) {
         this.matricule = matricule;
         this.nom = nom;
         this.email = email;
         this.telephone = telephone;
+        this.motDePasse = motDePasse;
     }
 
     public Long getId() {
@@ -94,9 +94,17 @@ public class Auteur implements Serializable{
         this.telephone = telephone;
     }
 
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
     @Override
     public String toString() {
-        return "Auteur{" + "id=" + id + ", matricule=" + matricule + ", nom=" + nom + ", email=" + email + ", telephone=" + telephone + '}';
+        return "Auteur{" + "id=" + id + ", active=" + active + ", matricule=" + matricule + ", nom=" + nom + ", email=" + email + ", telephone=" + telephone + ", motDePasse=" + motDePasse + '}';
     }
 
     @Override
