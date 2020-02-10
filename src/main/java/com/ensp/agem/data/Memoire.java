@@ -35,6 +35,8 @@ public class Memoire implements Serializable{
 
     @Temporal(TemporalType.DATE)
     private Date datePublication;
+    @Temporal(TemporalType.DATE)
+    private Date anneesSoutenance;
     private String motsCles;
     private String resume;
     private String abstrat;
@@ -99,6 +101,14 @@ public class Memoire implements Serializable{
 
     public void setDatePublication(Date datePublication) {
         this.datePublication = datePublication;
+    }
+
+    public Date getAnneesSoutenance() {
+        return anneesSoutenance;
+    }
+
+    public void setAnneesSoutenance(Date anneesSoutenance) {
+        this.anneesSoutenance = anneesSoutenance;
     }
 
     public String getMotsCles() {

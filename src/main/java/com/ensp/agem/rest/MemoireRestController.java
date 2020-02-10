@@ -90,6 +90,7 @@ public class MemoireRestController {
      * @param memoire the memoire to create.
      * @param titre
      * @param datep
+     * @param annee
      * @param motCle
      * @param resume
      * @param abstrat
@@ -101,7 +102,7 @@ public class MemoireRestController {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/memoires")
-    public ResponseEntity<Memoire> createMemoire(@RequestBody Memoire memoire,String titre, Date datep, String motCle, String resume, 
+    public ResponseEntity<Memoire> createMemoire(@RequestBody Memoire memoire,String titre, Date datep, Date annee, String motCle, String resume, 
             String abstrat, List<Enseignant> encadreurs,List<Auteur> auteur, @RequestParam("file") MultipartFile file,HttpSession session) throws URISyntaxException {
         log.debug("REST request to save Memoire : {}", memoire);
         Memoire memory = memoireRepository.findMemoireByTitre(memoire.getTitre());
@@ -112,7 +113,8 @@ public class MemoireRestController {
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         memoire.setActive(1);
         memoire.setTitre(titre);
-        memoire.setDatePublication(datep);
+        memoire.setDatePublication(new Date());
+        memoire.setAnneesSoutenance(annee);
         memoire.setMotsCles(motCle);
         memoire.setResume(resume);
         memoire.setAbstrat(abstrat);
