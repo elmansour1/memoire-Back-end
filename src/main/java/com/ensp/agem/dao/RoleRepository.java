@@ -5,7 +5,9 @@
  */
 package com.ensp.agem.dao;
 
+import com.ensp.agem.data.ERole;
 import com.ensp.agem.data.Role;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +18,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long>{
-    
+    Optional<Role> findByName(ERole name);
 }

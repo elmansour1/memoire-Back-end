@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,7 +28,9 @@ public class Role implements Serializable{
 //    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
-    private String rolename;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole name;
 
     public Role() {
     }
@@ -46,24 +50,25 @@ public class Role implements Serializable{
     public void setActive(int active) {
         this.active = active;
     }
-    
-    public String getRolename() {
-        return rolename;
+
+    public ERole getName() {
+        return name;
     }
 
-    public void setRolename(String rolename) {
-        this.rolename = rolename;
+    public void setName(ERole name) {
+        this.name = name;
     }
+
 
     @Override
     public String toString() {
-        return "Role{" + "id=" + id + ", rolename=" + rolename + '}';
+        return "Role{" + "id=" + id + ", active=" + active + ", name=" + name + '}';
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.rolename);
+        int hash = 7;
+        hash = 11 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
@@ -79,7 +84,7 @@ public class Role implements Serializable{
             return false;
         }
         final Role other = (Role) obj;
-        if (!Objects.equals(this.rolename, other.rolename)) {
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
         return true;

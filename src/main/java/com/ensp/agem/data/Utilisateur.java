@@ -6,9 +6,12 @@
 package com.ensp.agem.data;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +19,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -30,13 +36,32 @@ public class Utilisateur implements Serializable{
 //    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
-    private String login;
+    
+//    @NotBlank
+    @Size(max = 20)
+    private String username;
+    
+//    @NotBlank
+    @Size(max = 50)
+    @Email
+    private String email;
+    
+//    @NotBlank
+    @Size(max = 120)
     private String password;
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Role role;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(	name = "utilisateur_roles", 
+				joinColumns = @JoinColumn(name = "utilisateur_id"), 
+				inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles ;
 
     public Utilisateur() {
+    }
+
+    public Utilisateur(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
     
@@ -55,13 +80,22 @@ public class Utilisateur implements Serializable{
     public void setActive(int active) {
         this.active = active;
     }
-    
-    public String getLogin() {
-        return login;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -72,19 +106,17 @@ public class Utilisateur implements Serializable{
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
-    
     @Override
     public String toString() {
-        return "Utilisateur{" + "id=" + id + ", login=" + login + ", password=" + password + ", role=" + role + '}';
+        return "Utilisateur{" + "id=" + id + ", active=" + active + ", username=" + username + ", email=" + email + ", password=" + password + ", roles=" + roles + '}';
     }
-    
     
 }
