@@ -8,6 +8,7 @@ package com.ensp.agem.rest;
 import com.ensp.agem.dao.DepartementRepository;
 import com.ensp.agem.data.Departement;
 import com.ensp.agem.errors.BadRequestAlertException;
+import com.ensp.agem.payload.response.MessageResponse;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import java.net.URI;

@@ -5,8 +5,6 @@
  */
 package com.ensp.agem.payload.request;
 
-import javax.validation.constraints.NotBlank;
-
 /**
  *
  * @author mansour
