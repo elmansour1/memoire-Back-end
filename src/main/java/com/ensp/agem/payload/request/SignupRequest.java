@@ -5,6 +5,8 @@
  */
 package com.ensp.agem.payload.request;
 
+import com.ensp.agem.data.Role;
+import java.util.List;
 import java.util.Set;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -16,18 +18,18 @@ import javax.validation.constraints.Size;
  */
 public class SignupRequest {
 //    @NotBlank
-    @Size(min = 3, max = 20)
+//    @Size(min = 3, max = 20)
     private String username;
  
 //    @NotBlank
-    @Size(max = 50)
-    @Email
+//    @Size(max = 50)
+//    @Email
     private String email;
     
-    private Set<String> role;
+    private List<Role> role;
     
 //    @NotBlank
-    @Size(min = 6, max = 40)
+//    @Size(min = 6, max = 40)
     private String password;
   
     public String getUsername() {
@@ -54,11 +56,11 @@ public class SignupRequest {
         this.password = password;
     }
     
-    public Set<String> getRole() {
+    public List<Role> getRole() {
       return this.role;
     }
     
-    public void setRole(Set<String> role) {
+    public void setRole(List<Role> role) {
       this.role = role;
     }
 }

@@ -6,8 +6,10 @@
 package com.ensp.agem.rest;
 
 import com.ensp.agem.dao.UtilisateurRepository;
+import com.ensp.agem.data.Role;
 import com.ensp.agem.data.Utilisateur;
 import com.ensp.agem.errors.BadRequestAlertException;
+import com.ensp.agem.payload.response.MessageResponse;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import java.net.URI;
@@ -15,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -51,21 +54,35 @@ public class UtilisateurRestController {
      * {@code POST  /utilisateurs} : Create a new utilisateur.
      *
      * @param utilisateur the utilisateur to create.
+     * @param roles
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new utilisateur, or with status {@code 400 (Bad Request)} if the utilisateur has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/utilisateurs")
-    public ResponseEntity<Utilisateur> createUtilisateur(@RequestBody Utilisateur utilisateur) throws URISyntaxException {
+    public ResponseEntity<?> createUtilisateur(@RequestBody Utilisateur utilisateur) throws URISyntaxException {
         log.debug("REST request to save Utilisateur : {}", utilisateur);
         if (utilisateur.getId() != null) {
             throw new BadRequestAlertException("A new utilisateur cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (utilisateurRepository.existsByUsername(utilisateur.getUsername())) {
+                    return ResponseEntity
+                                    .badRequest()
+                                    .body(new MessageResponse("Error: Username is already taken!"));
+            }
+
+            if (utilisateurRepository.existsByEmail(utilisateur.getEmail())) {
+                    return ResponseEntity
+                                    .badRequest()
+                                    .body(new MessageResponse("Error: Email is already in use!"));
+            }
         utilisateur.setActive(1);
-        Utilisateur result = utilisateurRepository.save(utilisateur);
+//        utilisateur.setRoles(roles);
+        utilisateurRepository.save(utilisateur);
      //   utilisateurSearchRepository.save(result);
-        return ResponseEntity.created(new URI("/api/utilisateurs/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("Utilisateur", false, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+//        return ResponseEntity.created(new URI("/api/utilisateurs/" + result.getId()))
+//            .headers(HeaderUtil.createEntityCreationAlert("Utilisateur", false, ENTITY_NAME, result.getId().toString()))
+//            .body(result);
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
     /**

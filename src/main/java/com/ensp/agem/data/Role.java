@@ -14,6 +14,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -21,6 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author mansour <faouzielmansour@yahoo.com>
  */
 @Entity
+//@Table(name = "roles")
 public class Role implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +30,16 @@ public class Role implements Serializable{
 //    @XmlTransient
     @Column(columnDefinition = "int default 1")
     private int active;
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private ERole name;
+//    @Enumerated(EnumType.STRING)
+//    @Column(length = 20)
+    private String name;
 
     public Role() {
     }
+
+//    public Role(String name) {
+//        this.name = name;
+//    }
 
     public Long getId() {
         return id;
@@ -51,13 +57,15 @@ public class Role implements Serializable{
         this.active = active;
     }
 
-    public ERole getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(ERole name) {
+    public void setName(String name) {
         this.name = name;
     }
+
+  
 
 
     @Override
