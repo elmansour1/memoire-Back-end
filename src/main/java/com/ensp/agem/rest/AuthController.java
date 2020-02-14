@@ -80,7 +80,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody Utilisateur utilisateur) {
-            if (userRepository.existsByUsername(utilisateur.getUsername())) {
+        if (userRepository.existsByUsername(utilisateur.getUsername())) {
                     return ResponseEntity
                                     .badRequest()
                                     .body(new MessageResponse("Error: Username is already taken!"));
@@ -101,33 +101,6 @@ public class AuthController {
             System.out.println(utilisateur.getRoles());
             Set<Role> roles = new HashSet<>();
              System.out.println(user.toString());
-//            if (strRoles == null) {
-//                    Role userRole = roleRepository.findByName()
-//                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                    roles.add(userRole);
-//            } else {
-//                    strRoles.forEach(role -> {
-//                            switch (role) {
-//                            case "admin":
-//                                    Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-//                                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                                    roles.add(adminRole);
-//
-//                                    break;
-//                            case "user":
-//                                    Role modRole = roleRepository.findByName(ERole.ROLE_USER)
-//                                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                                    roles.add(modRole);
-//
-//                                    break;
-//                            default:
-//                                    Role userRole = roleRepository.findByName(ERole.ROLE_VISITOR)
-//                                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                                    roles.add(userRole);
-//                            }
-//                    });
-//            }
-            
             user.setActive(1);
             user.setRoles(strRoles);
            System.out.println(user.toString());

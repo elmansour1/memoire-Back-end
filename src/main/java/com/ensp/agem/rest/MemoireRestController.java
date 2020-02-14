@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,7 +58,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api")
+//@RequestMapping("/api")
 public class MemoireRestController {
     private final Logger log = LoggerFactory.getLogger(MemoireRestController.class);
     private final Logger logger = LoggerFactory.getLogger(MemoireRestController.class);
@@ -101,9 +103,9 @@ public class MemoireRestController {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new memoire, or with status {@code 400 (Bad Request)} if the memoire has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/memoires")
-    public ResponseEntity<Memoire> createMemoire(@RequestBody Memoire memoire,String titre, Date datep, Date annee, String motCle, String resume, 
-            String abstrat, List<Enseignant> encadreurs,List<Auteur> auteur, @RequestParam("file") MultipartFile file,HttpSession session) throws URISyntaxException {
+//    @PostMapping("/memoires")
+    @RequestMapping(value=("/api/memoires"),method=RequestMethod.POST)
+    public ResponseEntity<Memoire> createMemoire(@RequestBody Memoire memoire,HttpSession session) throws URISyntaxException { 
         log.debug("REST request to save Memoire : {}", memoire);
         Memoire memory = memoireRepository.findMemoireByTitre(memoire.getTitre());
         if ( memory != null) {
@@ -112,18 +114,20 @@ public class MemoireRestController {
         
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         memoire.setActive(1);
-        memoire.setTitre(titre);
+//        memoire.setTitre(titre);
         memoire.setDatePublication(new Date());
-        memoire.setAnneesSoutenance(annee);
-        memoire.setMotsCles(motCle);
-        memoire.setResume(resume);
-        memoire.setAbstrat(abstrat);
-        String fichier = fileStorageService.storeFile(file);
-        System.out.println(fichier);
-        memoire.setDocument("/downloadFile/"+fileStorageService.storeFile(file));
+//        memoire.setAnneesSoutenance(annee);
+//        memoire.setMotsCles(motCle);
+//        memoire.setResume(resume);
+//        memoire.setAbstrat(abstrat);
+//        String fichier = fileStorageService.storeFile(file);
+//        System.out.println(fichier);
+//        memoire.setDocument("/downloadFile/"+fileStorageService.storeFile(file));
+        memoire.setDocument("/downloadFile/"+memoire.getDocument());
+
 //        memoire.setSpecialisation(specialisation);
-        memoire.setEncadreurs(encadreurs);
-        memoire.setAuteurs(auteur);
+//        memoire.setEncadreurs(encadreurs);
+//        memoire.setAuteurs(auteurs);
         
         Memoire result = memoireRepository.save(memoire);
      //   memoireSearchRepository.save(result);
@@ -144,7 +148,8 @@ public class MemoireRestController {
      * or with status {@code 500 (Internal Server Error)} if the memoire couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/memoires")
+//    @PutMapping("/memoires")
+   @RequestMapping(value=("/api/memoires"),headers=("content-type=multipart/*"),method=RequestMethod.PUT)
     public ResponseEntity<Memoire> updateMemoire(@RequestBody Memoire memoire, @RequestParam("file") MultipartFile file,HttpSession session) throws URISyntaxException {
         log.debug("REST request to update Memoire : {}", memoire);
         if (memoire.getId() == null) {
@@ -168,10 +173,10 @@ public class MemoireRestController {
 
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of memoires in body.
      */
-    @GetMapping("/memoires")
+    @GetMapping("/api/memoires")
     public List<Memoire> getAllMemoires() {
         log.debug("REST request to get all Memoires");
-        return memoireRepository.findAll();
+        return (List<Memoire>)memoireRepository.findAll();
     }
 
     /**
@@ -180,7 +185,7 @@ public class MemoireRestController {
      * @param id the id of the memoire to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the memoire, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/memoires/{id}")
+    @GetMapping("/api/memoires/{id}")
     public ResponseEntity<Memoire> getMemoire(@PathVariable Long id) {
         log.debug("REST request to get Memoire : {}", id);
         Optional<Memoire> memoire = memoireRepository.findById(id);
@@ -193,7 +198,7 @@ public class MemoireRestController {
      * @param id the id of the memoire to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/memoires/{id}")
+    @DeleteMapping("/api/memoires/{id}")
     public ResponseEntity<Void> deleteMemoire(@PathVariable Long id) {
         log.debug("REST request to delete Memoire : {}", id);
         memoireRepository.deleteById(id);
@@ -215,13 +220,13 @@ public class MemoireRestController {
                 file.getContentType(), file.getSize());
     }
     
-    @PostMapping("/memoire/uploadMultipleFiles")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-        return Arrays.asList(files)
-                .stream()
-                .map(file -> uploadFile(file))
-                .collect(Collectors.toList());
-    }
+//    @PostMapping("/memoire/uploadMultipleFiles")
+//    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+//        return Arrays.asList(files)
+//                .stream()
+//                .map(file -> uploadFile(file))
+//                .collect(Collectors.toSet());
+//    }
     
     @GetMapping("/memoire/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) throws MalformedURLException {

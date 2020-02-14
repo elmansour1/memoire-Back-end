@@ -100,6 +100,7 @@ public class UtilisateurRestController {
         if (utilisateur.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        
         Utilisateur result = utilisateurRepository.save(utilisateur);
 //        utilisateurSearchRepository.save(result);
         return ResponseEntity.ok()

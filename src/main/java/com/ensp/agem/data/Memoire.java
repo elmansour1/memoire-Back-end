@@ -6,6 +6,7 @@
 package com.ensp.agem.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -59,16 +60,18 @@ public class Memoire implements Serializable{
     public Memoire() {
     }
 
-//    public Memoire(String titre, Date datePublication, String motsCles, String resume, String abstrat, String document, List<Enseignant> encadreurs, List<Auteur> auteurs) {
-//        this.titre = titre;
-//        this.datePublication = datePublication;
-//        this.motsCles = motsCles;
-//        this.resume = resume;
-//        this.abstrat = abstrat;
-//        this.document = document;
-//        this.encadreurs = encadreurs;
-//        this.auteurs = auteurs;
-//    }
+    public Memoire(String titre, Date datePublication, Date anneesSoutenance, String motsCles, String resume, String abstrat, String document, List<Enseignant> encadreurs, List<Auteur> auteurs) {
+        this.titre = titre;
+        this.datePublication = datePublication;
+        this.anneesSoutenance = anneesSoutenance;
+        this.motsCles = motsCles;
+        this.resume = resume;
+        this.abstrat = abstrat;
+        this.document = document;
+        this.encadreurs = encadreurs;
+        this.auteurs = auteurs;
+    }
+
     
     
     public Long getId() {

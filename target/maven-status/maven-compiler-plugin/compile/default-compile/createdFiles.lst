@@ -28,7 +28,6 @@ com/ensp/agem/errors/FieldErrorVM.class
 com/ensp/agem/security/services/jwt/JwtUtils.class
 com/ensp/agem/exception/FileStorageException.class
 com/ensp/agem/payload/response/JwtResponse.class
-com/ensp/agem/rest/FileStorageRespone.class
 com/ensp/agem/data/Enseignant.class
 com/ensp/agem/dao/ParcoursRepository.class
 com/ensp/agem/dao/AuteurRepository.class
