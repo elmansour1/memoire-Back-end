@@ -6,7 +6,6 @@
 package com.ensp.agem.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -16,11 +15,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -39,13 +42,18 @@ public class Memoire implements Serializable{
     @Temporal(TemporalType.DATE)
     private Date anneesSoutenance;
     private String motsCles;
+    @Size(min=10, max=20000)
     private String resume;
+    @Size(min=10, max=20000)
     private String abstrat;
-
+    private int nbreEncadreur;
+    private int nbreExaminateur;
+    private int nbreInviter;
     private String document;
     
-    
-//    private Specialisation specialisation;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Specialisation specialisation;
     
     @ManyToMany
     @JoinTable
@@ -60,19 +68,21 @@ public class Memoire implements Serializable{
     public Memoire() {
     }
 
-    public Memoire(String titre, Date datePublication, Date anneesSoutenance, String motsCles, String resume, String abstrat, String document, List<Enseignant> encadreurs, List<Auteur> auteurs) {
+    public Memoire(String titre, Date datePublication, Date anneesSoutenance, String motsCles, String resume, String abstrat, int nbreEncadreur, int nbreExaminateur, int nbreInviter, String document, Specialisation specialisation, List<Enseignant> encadreurs, List<Auteur> auteurs) {
         this.titre = titre;
         this.datePublication = datePublication;
         this.anneesSoutenance = anneesSoutenance;
         this.motsCles = motsCles;
         this.resume = resume;
         this.abstrat = abstrat;
+        this.nbreEncadreur = nbreEncadreur;
+        this.nbreExaminateur = nbreExaminateur;
+        this.nbreInviter = nbreInviter;
         this.document = document;
+        this.specialisation = specialisation;
         this.encadreurs = encadreurs;
         this.auteurs = auteurs;
     }
-
-    
     
     public Long getId() {
         return id;
@@ -146,6 +156,40 @@ public class Memoire implements Serializable{
         this.document = document;
     }
 
+    public Specialisation getSpecialisation() {
+        return specialisation;
+    }
+
+    public void setSpecialisation(Specialisation specialisation) {
+        this.specialisation = specialisation;
+    }
+
+       
+    public int getNbreEncadreur() {
+        return nbreEncadreur;
+    }
+
+    public void setNbreEncadreur(int nbreEncadreur) {
+        this.nbreEncadreur = nbreEncadreur;
+    }
+
+    public int getNbreExaminateur() {
+        return nbreExaminateur;
+    }
+
+    public void setNbreExaminateur(int nbreExaminateur) {
+        this.nbreExaminateur = nbreExaminateur;
+    }
+
+    public int getNbreInviter() {
+        return nbreInviter;
+    }
+
+    public void setNbreInviter(int nbreInviter) {
+        this.nbreInviter = nbreInviter;
+    }
+
+    
     public List<Enseignant> getEncadreurs() {
         return encadreurs;
     }

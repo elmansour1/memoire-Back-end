@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -149,17 +150,19 @@ public class MemoireRestController {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
 //    @PutMapping("/memoires")
-   @RequestMapping(value=("/api/memoires"),headers=("content-type=multipart/*"),method=RequestMethod.PUT)
-    public ResponseEntity<Memoire> updateMemoire(@RequestBody Memoire memoire, @RequestParam("file") MultipartFile file,HttpSession session) throws URISyntaxException {
+   @RequestMapping(value=("/api/memoires"),method=RequestMethod.PUT)
+    public ResponseEntity<Memoire> updateMemoire(@RequestBody Memoire memoire,HttpSession session) throws URISyntaxException {
         log.debug("REST request to update Memoire : {}", memoire);
         if (memoire.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if(file.isEmpty()){
-            String fichier = fileStorageService.storeFile(file);
-            System.out.println(fichier);
-            memoire.setDocument("/downloadFile/"+fileStorageService.storeFile(file));
-        }
+//        if(file.isEmpty()){
+//            String fichier = fileStorageService.storeFile(file);
+//            System.out.println(fichier);
+//            memoire.setDocument(fileStorageService.storeFile(file));
+//        }
+        memoire.setDatePublication(new Date());
+        memoire.setDocument("/downloadFile/"+memoire.getDocument());
         Memoire result = memoireRepository.save(memoire);
 //        memoireSearchRepository.save(result);
         return ResponseEntity.ok()
@@ -228,7 +231,7 @@ public class MemoireRestController {
 //                .collect(Collectors.toSet());
 //    }
     
-    @GetMapping("/memoire/downloadFile/{fileName:.+}")
+    @GetMapping("/api/memoire/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) throws MalformedURLException {
         // Load file as Resource
         Resource resource = fileStorageService.loadFileAsResource(fileName);
@@ -251,4 +254,21 @@ public class MemoireRestController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
+    
+    @GetMapping("/api/memoire/{fileName:.+}")
+    public ResponseEntity<Resource> displayPDF(@PathVariable String fileName, HttpServletRequest request) throws MalformedURLException {
+        // Load file as Resource
+        Resource resource = fileStorageService.loadFileAsResource(fileName);
+
+       HttpHeaders headers = new HttpHeaders();
+
+       headers.setContentType(MediaType.parseMediaType("application/pdf"));
+       headers.add("content-disposition", "inline;filename=" + resource);
+       headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
+    
 }
