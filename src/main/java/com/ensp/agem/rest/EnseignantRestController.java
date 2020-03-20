@@ -14,7 +14,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +99,7 @@ public class EnseignantRestController {
     @GetMapping("/enseignants")
     public List<Enseignant> getAllEnseignants() {
         log.debug("REST request to get all Enseignants");
-        return enseignantRepository.findAll();
+        return enseignantRepository.findAllEnseignant();
     }
 
     /**
@@ -125,7 +124,12 @@ public class EnseignantRestController {
     @DeleteMapping("/enseignants/{id}")
     public ResponseEntity<Void> deleteEnseignant(@PathVariable Long id) {
         log.debug("REST request to delete Enseignant : {}", id);
-        enseignantRepository.deleteById(id);
+        Enseignant enseignant = enseignantRepository.getOne(id);
+        if(enseignant != null){
+            enseignant.setActive(0);
+            enseignantRepository.save(enseignant);
+        }
+//        enseignantRepository.deleteById(id);
 //        enseignantSearchRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("Enseignant", false, ENTITY_NAME, id.toString())).build();
     }

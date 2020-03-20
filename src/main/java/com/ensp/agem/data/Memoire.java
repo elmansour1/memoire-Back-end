@@ -217,8 +217,9 @@ public class Memoire implements Serializable{
 
     @Override
     public String toString() {
-        return "Memoire{" + "id=" + id + ", titre=" + titre + ", datePublication=" + datePublication + ", motsCles=" + motsCles + ", resume=" + resume + ", abstrat=" + abstrat + ", document=" + document + ", encadreurs=" + encadreurs + ", auteurs=" + auteurs + '}';
+        return "Memoire{" + "id=" + id + ", titre=" + titre + ", datePublication=" + datePublication + ", motsCles=" + motsCles + ", resume=" + resume + ", abstrat=" + abstrat +  '}';
     }
+    
     
     @Override
     public int hashCode() {

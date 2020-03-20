@@ -100,7 +100,7 @@ public class DepartementRestController {
     @GetMapping("/departements")
     public List<Departement> getAllDepartements() {
         log.debug("REST request to get all Departements");
-        return departementRepository.findAll();
+        return departementRepository.findAllDepartement();
     }
 
     /**
@@ -125,7 +125,12 @@ public class DepartementRestController {
     @DeleteMapping("/departements/{id}")
     public ResponseEntity<Void> deleteDepartement(@PathVariable Long id) {
         log.debug("REST request to delete Departement : {}", id);
-        departementRepository.deleteById(id);
+        Departement departement = departementRepository.getOne(id);
+        if(departement != null){
+            departement.setActive(0);
+            departementRepository.save(departement);
+        }
+//        departementRepository.deleteById(id);
 //        departementSearchRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("Departement", false, ENTITY_NAME, id.toString())).build();
     }

@@ -22,5 +22,6 @@ import org.springframework.stereotype.Repository;
 public interface ParcoursRepository extends JpaRepository<Parcours, Long>{
     @Query("select s.code, s.parcours.id from Specialisation s, Parcours p where s.id = p.id and s.parcours.id=p.id and p.nom =:x")
     public String findParoursBySpecialisation(@Param("x")String nom);
-    
+    @Query("select p from Parcours p where p.active = 1")
+    public List<Parcours> findAllParcours();
 }

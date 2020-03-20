@@ -99,7 +99,7 @@ public class RoleRestController {
     @GetMapping("/roles")
     public List<Role> getAllRoles() {
         log.debug("REST request to get all Roles");
-        return roleRepository.findAll();
+        return roleRepository.findAllRole();
     }
 
     /**
@@ -124,7 +124,12 @@ public class RoleRestController {
     @DeleteMapping("/roles/{id}")
     public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
         log.debug("REST request to delete Role : {}", id);
-        roleRepository.deleteById(id);
+        Role role = roleRepository.getOne(id);
+        if( role != null){
+            role.setActive(0);
+            roleRepository.save(role);
+        }
+//        roleRepository.deleteById(id);
 //        roleSearchRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("Role", false, ENTITY_NAME, id.toString())).build();
     }

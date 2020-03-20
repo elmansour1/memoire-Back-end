@@ -54,10 +54,6 @@ public class SpecialisationRestController {
      * {@code POST  /specialisations} : Create a new specialisation.
      *
      * @param specialisation the specialisation to create.
-     * @param code
-     * @param description
-     * @param departement
-     * @param parcours
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new specialisation, or with status {@code 400 (Bad Request)} if the specialisation has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
@@ -108,7 +104,7 @@ public class SpecialisationRestController {
     @GetMapping("/specialisations")
     public List<Specialisation> getAllSpecialisations() {
         log.debug("REST request to get all Specialisations");
-        return specialisationRepository.findAll();
+        return specialisationRepository.findAllSpecialisation();
     }
 
     /**
@@ -133,7 +129,12 @@ public class SpecialisationRestController {
     @DeleteMapping("/specialisations/{id}")
     public ResponseEntity<Void> deleteSpecialisation(@PathVariable Long id) {
         log.debug("REST request to delete Specialisation : {}", id);
-        specialisationRepository.deleteById(id);
+        Specialisation specialisation = specialisationRepository.getOne(id);
+        if(specialisation != null){
+            specialisation.setActive(0);
+            specialisationRepository.save(specialisation);
+        }
+//        specialisationRepository.deleteById(id);
 //        specialisationSearchRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("Specialisation", false, ENTITY_NAME, id.toString())).build();
     }

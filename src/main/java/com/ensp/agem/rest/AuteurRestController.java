@@ -100,7 +100,7 @@ public class AuteurRestController {
     @GetMapping("/auteurs")
     public List<Auteur> getAllAuteurs() {
         log.debug("REST request to get all Auteurs");
-        return auteurRepository.findAll();
+        return auteurRepository.findAllAuteur();
     }
 
     /**
@@ -125,7 +125,12 @@ public class AuteurRestController {
     @DeleteMapping("/auteurs/{id}")
     public ResponseEntity<Void> deleteAuteur(@PathVariable Long id) {
         log.debug("REST request to delete Auteur : {}", id);
-        auteurRepository.deleteById(id);
+        Auteur auteur = auteurRepository.getOne(id);
+        if(auteur != null){
+            auteur.setActive(0);
+            auteurRepository.save(auteur);
+        }
+//        auteurRepository.deleteById(id);
 //        auteurSearchRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("Auteur", false, ENTITY_NAME, id.toString())).build();
     }

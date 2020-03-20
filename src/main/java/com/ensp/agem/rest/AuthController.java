@@ -5,7 +5,6 @@
  */
 package com.ensp.agem.rest;
 
-import com.ensp.agem.data.ERole;
 import com.ensp.agem.dao.RoleRepository;
 import com.ensp.agem.dao.UtilisateurRepository;
 import com.ensp.agem.data.Role;
@@ -14,7 +13,6 @@ import com.ensp.agem.payload.request.LoginRequest;
 import com.ensp.agem.payload.response.JwtResponse;
 import com.ensp.agem.security.services.UserDetailsImpl;
 import com.ensp.agem.security.services.jwt.JwtUtils;
-import com.ensp.agem.payload.request.SignupRequest;
 import com.ensp.agem.payload.response.MessageResponse;
 import java.util.HashSet;
 import java.util.List;

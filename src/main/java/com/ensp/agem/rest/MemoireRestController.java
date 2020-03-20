@@ -59,7 +59,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 @CrossOrigin("*")
 @RestController
-//@RequestMapping("/api")
 public class MemoireRestController {
     private final Logger log = LoggerFactory.getLogger(MemoireRestController.class);
     private final Logger logger = LoggerFactory.getLogger(MemoireRestController.class);
@@ -82,24 +81,11 @@ public class MemoireRestController {
     @Autowired
     private FileStorageService fileStorageService;
     
-//    public MemoireRestController(MemoireRepository memoireRepository, FileStorageService fileStorageService){
-//        this.memoireRepository = memoireRepository;
-//        this.fileStorageService = fileStorageService;
-//    }
     
     /**
      * {@code POST  /memoires} : Create a new memoire.
      *
      * @param memoire the memoire to create.
-     * @param titre
-     * @param datep
-     * @param annee
-     * @param motCle
-     * @param resume
-     * @param abstrat
-     * @param encadreurs
-     * @param auteur
-     * @param file
      * @param session
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new memoire, or with status {@code 400 (Bad Request)} if the memoire has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
@@ -112,26 +98,10 @@ public class MemoireRestController {
         if ( memory != null) {
             throw new BadRequestAlertException("Ce memoire existe déjà du moins le titre", ENTITY_NAME, "Memoire existe");
         }else{
-        
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         memoire.setActive(1);
-//        memoire.setTitre(titre);
         memoire.setDatePublication(new Date());
-//        memoire.setAnneesSoutenance(annee);
-//        memoire.setMotsCles(motCle);
-//        memoire.setResume(resume);
-//        memoire.setAbstrat(abstrat);
-//        String fichier = fileStorageService.storeFile(file);
-//        System.out.println(fichier);
-//        memoire.setDocument("/downloadFile/"+fileStorageService.storeFile(file));
         memoire.setDocument("/downloadFile/"+memoire.getDocument());
-
-//        memoire.setSpecialisation(specialisation);
-//        memoire.setEncadreurs(encadreurs);
-//        memoire.setAuteurs(auteurs);
-        
         Memoire result = memoireRepository.save(memoire);
-     //   memoireSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/memoires/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("Memoire", false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -142,7 +112,6 @@ public class MemoireRestController {
      * {@code PUT  /memoires} : Updates an existing memoire.
      *
      * @param memoire the memoire to update.
-     * @param file
      * @param session
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated memoire,
      * or with status {@code 400 (Bad Request)} if the memoire is not valid,
@@ -156,11 +125,8 @@ public class MemoireRestController {
         if (memoire.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-//        if(file.isEmpty()){
-//            String fichier = fileStorageService.storeFile(file);
-//            System.out.println(fichier);
-//            memoire.setDocument(fileStorageService.storeFile(file));
-//        }
+        
+        
         memoire.setDatePublication(new Date());
         memoire.setDocument("/downloadFile/"+memoire.getDocument());
         Memoire result = memoireRepository.save(memoire);
@@ -179,7 +145,8 @@ public class MemoireRestController {
     @GetMapping("/api/memoires")
     public List<Memoire> getAllMemoires() {
         log.debug("REST request to get all Memoires");
-        return (List<Memoire>)memoireRepository.findAll();
+        
+        return (List<Memoire>)memoireRepository.findAllMemoire();
     }
 
     /**
@@ -204,8 +171,12 @@ public class MemoireRestController {
     @DeleteMapping("/api/memoires/{id}")
     public ResponseEntity<Void> deleteMemoire(@PathVariable Long id) {
         log.debug("REST request to delete Memoire : {}", id);
-        memoireRepository.deleteById(id);
-//        memoireSearchRepository.deleteById(id);
+        Memoire memoire;
+        memoire = memoireRepository.getOne(id);
+        if(memoire != null){
+            memoire.setActive(0);
+            memoireRepository.save(memoire);
+        }
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("Memoire", false, ENTITY_NAME, id.toString())).build();
     }
    
@@ -222,14 +193,6 @@ public class MemoireRestController {
         return new UploadFileResponse(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());
     }
-    
-//    @PostMapping("/memoire/uploadMultipleFiles")
-//    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-//        return Arrays.asList(files)
-//                .stream()
-//                .map(file -> uploadFile(file))
-//                .collect(Collectors.toSet());
-//    }
     
     @GetMapping("/api/memoire/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) throws MalformedURLException {

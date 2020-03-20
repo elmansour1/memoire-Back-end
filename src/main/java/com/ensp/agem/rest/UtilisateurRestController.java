@@ -117,7 +117,7 @@ public class UtilisateurRestController {
     @GetMapping("/utilisateurs")
     public List<Utilisateur> getAllUtilisateurs() {
         log.debug("REST request to get all Utilisateurs");
-        return utilisateurRepository.findAll();
+        return utilisateurRepository.findAllUtilisateur();
     }
 
     /**
@@ -142,7 +142,12 @@ public class UtilisateurRestController {
     @DeleteMapping("/utilisateurs/{id}")
     public ResponseEntity<Void> deleteUtilisateur(@PathVariable Long id) {
         log.debug("REST request to delete Utilisateur : {}", id);
-        utilisateurRepository.deleteById(id);
+        Utilisateur u = utilisateurRepository.getOne(id);
+        if(u != null){
+            u.setActive(0);
+            utilisateurRepository.save(u);
+        }
+//        utilisateurRepository.deleteById(id);
 //        utilisateurSearchRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("Utilisateur", false, ENTITY_NAME, id.toString())).build();
     }

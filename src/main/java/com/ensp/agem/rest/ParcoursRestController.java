@@ -99,7 +99,7 @@ public class ParcoursRestController {
     @GetMapping("/parcours")
     public List<Parcours> getAllParcourss() {
         log.debug("REST request to get all Parcourss");
-        return parcoursRepository.findAll();
+        return parcoursRepository.findAllParcours();
     }
 
     /**
@@ -124,7 +124,12 @@ public class ParcoursRestController {
     @DeleteMapping("/parcours/{id}")
     public ResponseEntity<Void> deleteParcours(@PathVariable Long id) {
         log.debug("REST request to delete Parcours : {}", id);
-        parcoursRepository.deleteById(id);
+        Parcours parcours = parcoursRepository.getOne(id);
+        if(parcours != null){
+            parcours.setActive(0);
+            parcoursRepository.save(parcours);
+        }
+//        parcoursRepository.deleteById(id);
 //        parcourSearchRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert("Parcours", false, ENTITY_NAME, id.toString())).build();
     }

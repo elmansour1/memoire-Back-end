@@ -6,6 +6,7 @@
 package com.ensp.agem.dao;
 
 import com.ensp.agem.data.Specialisation;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,6 @@ public interface SpecialisationRepository extends JpaRepository<Specialisation, 
     public String findSpecialisationByDepartement(@Param("x")String specialisation);
     @Query("select s.code from Specialisation s, Parcours p where s.id=p.id and p.nom =:x")
     public String findSpecialisationByParcours(@Param("x")String nom);
+    @Query("select s from Specialisation s where s.active = 1")
+    public List<Specialisation> findAllSpecialisation();
 }

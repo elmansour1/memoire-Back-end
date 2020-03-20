@@ -54,14 +54,7 @@ public class GestionMemoireApplication implements CommandLineRunner{
         repositoryRestConfiguration.exposeIdsFor(Auteur.class,Departement.class, Memoire.class,Parcours.class,Specialisation.class,
                 Enseignant.class,Utilisateur.class,Role.class);
         
-//        List<Specialisation> s ;
-//        Specialisation spec = new Specialisation();
-//        spec.setActive(1);
-//        spec.setTitre("IG/AP");
-//        spec.setDepartement();
-//         System.out.println((Departement)specialisationRepository.findSpecialisationByDepartement("Gelo"));
-//         List<Specialisation> sp,op ;
-//        
+        System.out.println(memoireRepository.findAllMemoire());
 
 
 //            Specilisation s = new Specialisation();
